@@ -44,14 +44,20 @@ class ModelBase
         SQL
       end
     else
-      QuestionsDatabase.instance.execute(<<-SQL, instance_variables)
-        INSERT INTO
-          #{table}#{generate_into}
-        VALUES
-          #{generate_values}
-      SQL
-      self.id = QuestionsDatabase.instance.last_insert_row_id
-    end
+      
+    #   instance_values = {}
+    #   instance_variables.each do |ivar|
+    #     instance_values[ivar] = self.ivar
+    #   end
+    # 
+    #   QuestionsDatabase.instance.execute(<<-SQL, instance_values )
+    #     INSERT INTO
+    #       #{table}#{generate_into}
+    #     VALUES
+    #       #{generate_values}
+    #   SQL
+    #   self.id = QuestionsDatabase.instance.last_insert_row_id
+    # end
   end
 
   def generate_into
