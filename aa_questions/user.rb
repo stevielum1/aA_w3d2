@@ -3,18 +3,10 @@ require_relative 'question'
 require_relative 'reply'
 require_relative 'question_follow'
 require_relative 'question_like'
+require_relative 'model_base'
 
-class User
+class User < ModelBase
   attr_accessor :id, :fname, :lname
-  def self.find_by_id(id)
-    data = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT *
-      FROM users
-      WHERE users.id = ?
-    SQL
-    raise "User::find_by_id is not in database" if data.length <= 0
-    User.new(data.first)
-  end
   
   def self.find_by_name(fname, lname)
     data = QuestionsDatabase.instance.execute(<<-SQL, fname, lname)
@@ -75,7 +67,7 @@ class User
         VALUES
           (?, ?)
       SQL
+      self.id = QuestionsDatabase.instance.last_insert_row_id
     end
-    self.id = QuestionsDatabase.instance.last_insert_row_id
   end
 end

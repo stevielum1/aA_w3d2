@@ -1,18 +1,10 @@
 require_relative 'questions_database'
 require_relative 'user'
 require_relative 'question'
+require_relative 'model_base'
 
-class Reply
+class Reply < ModelBase
   attr_accessor :id, :question_id, :parent_id, :user_id, :body
-  def self.find_by_id(id)
-    data = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT *
-      FROM replies
-      WHERE replies.id = ?
-    SQL
-    raise "Reply::find_by_id is not in database" if data.length <= 0
-    Reply.new(data.first)
-  end
   
   def self.find_by_user_id(user_id)
     data = QuestionsDatabase.instance.execute(<<-SQL, user_id)
@@ -98,9 +90,8 @@ class Reply
         VALUES
           (?, ?, ?,?)
       SQL
+      self.id = QuestionsDatabase.instance.last_insert_row_id
     end
-    self.id = QuestionsDatabase.instance.last_insert_row_id
   end
-  
   
 end
